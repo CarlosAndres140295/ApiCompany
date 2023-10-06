@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Models\Department;
@@ -22,6 +23,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::apiResource('/employees', EmployeeController::class);
-Route::apiResource('/departments', DepartmentController::class);
-Route::get('/employeesbydepartment', [EmployeeController::class, 'employeesByDepartment']);
+Route::post('auth/register', [AuthController::class, 'create']);
+Route::post('auth/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group( function (){
+    Route::apiResource('/employees', EmployeeController::class)->middleware('');
+    Route::apiResource('/departments', DepartmentController::class);
+    Route::get('/employeesbydepartment', [EmployeeController::class, 'employeesByDepartment']);
+    Route::get('auth/logout', [AuthController::class, 'logout']);
+});
+
+
